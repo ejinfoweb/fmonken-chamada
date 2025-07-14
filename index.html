@@ -256,7 +256,8 @@
     
     <div class="app-container">
         <div class="header">
-            <p style="font-size: 2.2rem; font-weight: bold; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); animation: pulse 2s infinite; margin-top: 15px; background: #ff4757; padding: 20px 25px; border-radius: 10px; border: 2px solid #cc3642; text-align: center;">🚨 EMERGÊNCIA<br>TOQUE PARA LIGAR AGORA 🚨</p>
+            <button onclick="sendEmergencyMessage()" style="font-size: 2.2rem; font-weight: bold; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); animation: pulse 2s infinite; margin-top: 15px; background: #ff4757; padding: 20px 25px; border-radius: 10px; border: 2px solid #cc3642; text-align: center; width: 100%; cursor: pointer; border: none;">🚨 EMERGÊNCIA 🚨</button>
+            <p style="font-size: 1.4rem; font-weight: bold; color: white; text-align: center; margin-top: 15px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">TOQUE ABAIXO PRA LIGAR PROS FILHOS</p>
         </div>
 
         <div class="contacts-container" id="contactsContainer">
@@ -347,16 +348,19 @@
             const hour = now.getHours();
             let period = '';
             if (hour >= 6 && hour < 12) {
-                period = 'Manhã';
+                period = 'MANHÃ';
             } else if (hour >= 12 && hour < 18) {
-                period = 'Tarde';
+                period = 'TARDE';
             } else if (hour >= 18 && hour < 24) {
-                period = 'Noite';
+                period = 'NOITE';
             } else {
-                period = 'Madrugada';
+                period = 'MADRUGADA';
             }
             
-            document.getElementById('timeDisplay').innerHTML = `${dateString} ${timeString}<br><small style="font-size: 0.8rem;">${period}</small>`;
+            document.getElementById('timeDisplay').innerHTML = `
+                ${dateString}<br>
+                ${timeString} <span style="color: #FFD700; font-size: 1.3rem; font-weight: bold; margin-left: 10px;">${period}</span>
+            `;
         }
 
         // Carregar contatos salvos
@@ -374,6 +378,26 @@
                 button.onclick = () => makeVideoCall(contact.phone);
                 container.appendChild(button);
             });
+        }
+
+        // Enviar mensagem de emergência para todos os filhos
+        function sendEmergencyMessage() {
+            const emergencyContacts = [
+                { name: 'Enrico', phone: '+5521988733159' },
+                { name: 'Juninho', phone: '+5511888888888' },
+                { name: 'Mariana', phone: '+5511777777777' }
+            ];
+            
+            emergencyContacts.forEach((contact, index) => {
+                setTimeout(() => {
+                    const cleanPhone = contact.phone.replace(/\D/g, '');
+                    const emergencyMsg = `🚨 EMERGÊNCIA! Preciso de ajuda urgente! Por favor me ligue agora!`;
+                    const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(emergencyMsg)}`;
+                    window.open(whatsappUrl, '_blank');
+                }, index * 1000); // Atraso de 1 segundo entre cada abertura
+            });
+            
+            alert('🚨 EMERGÊNCIA ATIVADA!\nMensagens enviadas para todos os filhos!');
         }
 
         // Fazer chamada de vídeo automática
