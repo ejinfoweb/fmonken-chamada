@@ -369,8 +369,7 @@
                 const button = document.createElement('button');
                 button.className = 'contact-button';
                 button.innerHTML = `
-                    <div class="video-icon">📹</div>
-                    <span>${contact.name}</span>
+                    <span style="width: 100%; text-align: center;">${contact.name}</span>
                     <button class="delete-btn" onclick="deleteContact(${index}); event.stopPropagation();">×</button>
                 `;
                 button.onclick = () => makeVideoCall(contact.phone);
