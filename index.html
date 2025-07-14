@@ -368,57 +368,18 @@
             contacts.forEach((contact, index) => {
                 const button = document.createElement('button');
                 button.className = 'contact-button';
-                
-                if (contact.isEmergency) {
-                    // Botão de emergência - vermelho e destacado
-                    button.style.background = 'linear-gradient(135deg, #ff4757 0%, #ff3742 100%)';
-                    button.style.color = 'white';
-                    button.style.fontWeight = 'bold';
-                    button.style.fontSize = '1.8rem';
-                    button.style.border = '3px solid #cc3642';
-                    button.style.animation = 'pulse 2s infinite';
-                    button.style.marginBottom = '30px';
-                    button.innerHTML = `
-                        <div class="video-icon" style="background: rgba(255,255,255,0.3); font-size: 24px;">🚨</div>
-                        <span>${contact.name}</span>
-                    `;
-                } else {
-                    // Botões normais dos filhos
-                    button.innerHTML = `
-                        <div class="video-icon">📹</div>
-                        <span>${contact.name}</span>
-                        <button class="delete-btn" onclick="deleteContact(${index}); event.stopPropagation();">×</button>
-                    `;
-                }
+                button.innerHTML = `
+                    <div class="video-icon">📹</div>
+                    <span>${contact.name}</span>
+                    <button class="delete-btn" onclick="deleteContact(${index}); event.stopPropagation();">×</button>
+                `;
                 button.onclick = () => makeVideoCall(contact.phone);
                 container.appendChild(button);
             });
         }
 
-        // Fazer chamada de vídeo ou emergência
+        // Fazer chamada de vídeo
         function makeVideoCall(phone) {
-            if (phone === 'EMERGENCY') {
-                // EMERGÊNCIA: Contactar todos os filhos
-                const emergencyContacts = [
-                    { name: 'Enrico', phone: '+5521988733159' },
-                    { name: 'Juninho', phone: '+5511888888888' },
-                    { name: 'Mariana', phone: '+5511777777777' }
-                ];
-                
-                emergencyContacts.forEach((contact, index) => {
-                    setTimeout(() => {
-                        const cleanPhone = contact.phone.replace(/\D/g, '');
-                        const emergencyMsg = `🚨 EMERGÊNCIA! Preciso de ajuda urgente! Por favor me ligue agora!`;
-                        const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(emergencyMsg)}`;
-                        window.open(whatsappUrl, '_blank');
-                    }, index * 1000); // Atraso de 1 segundo entre cada abertura
-                });
-                
-                alert('🚨 EMERGÊNCIA ATIVADA!\nMensagens enviadas para todos os filhos!');
-                return;
-            }
-            
-            // Chamada normal para um filho específico
             const cleanPhone = phone.replace(/\D/g, '');
             const whatsappUrl = `https://wa.me/${cleanPhone}?text=Oi! Vamos fazer uma chamada de vídeo?`;
             window.open(whatsappUrl, '_blank');
@@ -486,7 +447,6 @@
             
             // Limpar contatos antigos e adicionar os novos
             const newContacts = [
-                { name: '🚨 EMERGÊNCIA', phone: 'EMERGENCY', isEmergency: true },
                 { name: 'Enrico (Filho)', phone: '+5521988733159' },
                 { name: 'Juninho (Filho)', phone: '+5511888888888' },
                 { name: 'Mariana (Filha)', phone: '+5511777777777' }
