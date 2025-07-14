@@ -380,7 +380,7 @@
             });
         }
 
-        // Enviar mensagem de emergência para todos os filhos
+        // Enviar mensagem de emergência AUTOMÁTICA para todos os filhos
         function sendEmergencyMessage() {
             const emergencyContacts = [
                 { name: 'Enrico', phone: '+5521988733159' },
@@ -388,16 +388,33 @@
                 { name: 'Mariana', phone: '+5511777777777' }
             ];
             
+            // Tentar envio mais direto possível
             emergencyContacts.forEach((contact, index) => {
                 setTimeout(() => {
                     const cleanPhone = contact.phone.replace(/\D/g, '');
-                    const emergencyMsg = `🚨 EMERGÊNCIA! Preciso de ajuda urgente! Por favor me ligue agora!`;
-                    const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(emergencyMsg)}`;
-                    window.open(whatsappUrl, '_blank');
-                }, index * 1000); // Atraso de 1 segundo entre cada abertura
+                    const emergencyMsg = `🚨EMERGÊNCIA! Preciso de ajuda urgente! Me ligue agora!`;
+                    
+                    // Tentar método mais direto primeiro
+                    try {
+                        // Tenta abrir WhatsApp direto com mensagem
+                        window.location.href = `whatsapp://send?phone=${cleanPhone}&text=${encodeURIComponent(emergencyMsg)}`;
+                    } catch (e) {
+                        // Se não funcionar, usa método web
+                        const whatsappUrl = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(emergencyMsg)}`;
+                        window.open(whatsappUrl, '_blank');
+                    }
+                }, index * 500); // Mais rápido - 0.5 segundo entre cada
             });
             
-            alert('🚨 EMERGÊNCIA ATIVADA!\nMensagens enviadas para todos os filhos!');
+            // Feedback visual
+            const button = event.target;
+            button.style.background = '#28a745';
+            button.innerHTML = '✅ MENSAGENS ENVIADAS!';
+            
+            setTimeout(() => {
+                button.style.background = '#ff4757';
+                button.innerHTML = '🚨 EMERGÊNCIA 🚨';
+            }, 3000);
         }
 
         // Fazer chamada de vídeo automática
