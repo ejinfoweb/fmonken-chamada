@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chamada de Vídeo - WhatsApp</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Chamada Vídeo">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgcng9IjMiIGZpbGw9IiMyNUQ2NjYiLz48cGF0aCBkPSJNMTUgMTBsNC40MjEtMi42NTFBMSAxIDAgMCAxIDIxIDguMjM1djcuNTNhMSAxIDAgMCAxLTEuNTc5Ljgyalo1IDEwaDE0djJINXoiIGZpbGw9IndoaXRlIi8+PC9zdmc+">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: white;
+            overflow: hidden;
+        }
+
+        .app-container {
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .emergency-notice {
+            background: linear-gradient(45deg, #ff4757, #ff6b7a);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-align: center;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            animation: pulse 2s infinite;
+            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .contacts-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .contact-button {
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: 20px;
+            padding: 25px 30px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #128C7E;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            min-height: 80px;
+        }
+
+        .contact-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .contact-button:active {
+            transform: translateY(0);
+        }
+
+        .video-icon {
+            width: 40px;
+            height: 40px;
+            background: #25D366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .add-contact-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px dashed rgba(255, 255, 255, 0.5);
+            color: white;
+            font-size: 1.1rem;
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .add-contact-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            color: #333;
+        }
+
+        .modal h3 {
+            margin-bottom: 20px;
+            color: #128C7E;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #25D366;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #ccc;
+            color: #333;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .time-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .delete-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 16px;
+        }
+
+        .contact-button {
+            position: relative;
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .contact-button {
+                font-size: 1.2rem;
+                padding: 20px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="time-display" id="timeDisplay"></div>
+    
+    <div class="app-container">
+        <div class="header">
+            <p style="font-size: 1.6rem; font-weight: bold; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); animation: pulse 2s infinite; margin-top: 15px; background: #ff4757; padding: 15px 20px; border-radius: 10px; border: 2px solid #cc3642; text-align: center;">🚨 EMERGÊNCIA<br>LIGUE PARA SEUS FILHOS 🚨</p>
+        </div>
+
+        <div class="contacts-container" id="contactsContainer">
+            <!-- Contatos serão adicionados aqui -->
+        </div>
+
+        <button class="add-contact-btn" onclick="openModal()">
+            ➕ Adicionar Contato
+        </button>
+    </div>
+
+    <!-- Modal para adicionar contato -->
+    <div class="modal" id="contactModal">
+        <div class="modal-content">
+            <h3>Adicionar Novo Contato</h3>
+            <div class="input-group">
+                <label for="contactName">Nome:</label>
+                <input type="text" id="contactName" placeholder="Ex: João (Filho)">
+            </div>
+            <div class="input-group">
+                <label for="contactPhone">Telefone:</label>
+                <input type="tel" id="contactPhone" placeholder="Ex: +5511999999999">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="addContact()">Adicionar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sistema de vinculação do dispositivo
+        function getDeviceFingerprint() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.textBaseline = 'top';
+            ctx.font = '14px Arial';
+            ctx.fillText('Device fingerprint', 2, 2);
+            
+            const fingerprint = canvas.toDataURL() + 
+                navigator.userAgent + 
+                navigator.language + 
+                screen.width + 'x' + screen.height + 
+                new Date().getTimezoneOffset();
+            
+            return btoa(fingerprint).slice(0, 32);
+        }
+
+        function checkDeviceAuthorization() {
+            const currentDevice = getDeviceFingerprint();
+            const authorizedDevice = localStorage.getItem('authorizedDevice');
+            
+            if (!authorizedDevice) {
+                // Primeiro acesso - autorizar este dispositivo
+                localStorage.setItem('authorizedDevice', currentDevice);
+                return true;
+            }
+            
+            if (authorizedDevice !== currentDevice) {
+                // Dispositivo não autorizado
+                document.body.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; padding: 20px;">
+                        <h1 style="color: #ff4757; font-size: 2rem; margin-bottom: 20px;">🚫 Acesso Negado</h1>
+                        <p style="font-size: 1.2rem; margin-bottom: 20px;">Este aplicativo está vinculado a outro dispositivo.</p>
+                        <p style="font-size: 1rem; opacity: 0.8;">Entre em contato com o administrador para autorizar este celular.</p>
+                        <div style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                            <p style="font-size: 0.9rem;">ID do dispositivo atual:</p>
+                            <code style="background: rgba(0,0,0,0.3); padding: 5px; border-radius: 5px; font-size: 0.8rem;">${currentDevice}</code>
+                        </div>
+                    </div>
+                `;
+                return false;
+            }
+            
+            return true;
+        }
+        // Atualizar horário em tempo real
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('pt-BR', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            const dateString = now.toLocaleDateString('pt-BR', {
+                weekday: 'short',
+                day: '2-digit',
+                month: '2-digit'
+            });
+            
+            // Determinar período do dia
+            const hour = now.getHours();
+            let period = '';
+            if (hour >= 6 && hour < 12) {
+                period = 'Manhã';
+            } else if (hour >= 12 && hour < 18) {
+                period = 'Tarde';
+            } else if (hour >= 18 && hour < 24) {
+                period = 'Noite';
+            } else {
+                period = 'Madrugada';
+            }
+            
+            document.getElementById('timeDisplay').innerHTML = `${dateString} ${timeString}<br><small style="font-size: 0.8rem;">${period}</small>`;
+        }
+
+        // Carregar contatos salvos
+        function loadContacts() {
+            const contacts = JSON.parse(localStorage.getItem('whatsappContacts') || '[]');
+            const container = document.getElementById('contactsContainer');
+            container.innerHTML = '';
+
+            contacts.forEach((contact, index) => {
+                const button = document.createElement('button');
+                button.className = 'contact-button';
+                button.innerHTML = `
+                    <div class="video-icon">📹</div>
+                    <span>${contact.name}</span>
+                    <button class="delete-btn" onclick="deleteContact(${index}); event.stopPropagation();">×</button>
+                `;
+                button.onclick = () => makeVideoCall(contact.phone);
+                container.appendChild(button);
+            });
+        }
+
+        // Fazer chamada de vídeo
+        function makeVideoCall(phone) {
+            const cleanPhone = phone.replace(/\D/g, '');
+            const whatsappUrl = `https://wa.me/${cleanPhone}?text=Oi! Vamos fazer uma chamada de vídeo?`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Abrir modal
+        function openModal() {
+            document.getElementById('contactModal').style.display = 'block';
+        }
+
+        // Fechar modal
+        function closeModal() {
+            document.getElementById('contactModal').style.display = 'none';
+            document.getElementById('contactName').value = '';
+            document.getElementById('contactPhone').value = '';
+        }
+
+        // Adicionar contato
+        function addContact() {
+            const name = document.getElementById('contactName').value.trim();
+            const phone = document.getElementById('contactPhone').value.trim();
+
+            if (!name || !phone) {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
+
+            const contacts = JSON.parse(localStorage.getItem('whatsappContacts') || '[]');
+            contacts.push({ name, phone });
+            localStorage.setItem('whatsappContacts', JSON.stringify(contacts));
+
+            loadContacts();
+            closeModal();
+        }
+
+        // Deletar contato
+        function deleteContact(index) {
+            if (confirm('Tem certeza que deseja remover este contato?')) {
+                const contacts = JSON.parse(localStorage.getItem('whatsappContacts') || '[]');
+                contacts.splice(index, 1);
+                localStorage.setItem('whatsappContacts', JSON.stringify(contacts));
+                loadContacts();
+            }
+        }
+
+        // Prevenir que a tela desligue
+        let wakeLock = null;
+
+        async function requestWakeLock() {
+            try {
+                if ('wakeLock' in navigator) {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                }
+            } catch (err) {
+                console.log('Wake lock não suportado:', err);
+            }
+        }
+
+        // Inicializar aplicativo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar autorização do dispositivo
+            if (!checkDeviceAuthorization()) {
+                return; // Bloquear se não autorizado
+            }
+            
+            // Limpar contatos antigos e adicionar os novos
+            const newContacts = [
+                { name: 'Enrico (Filho)', phone: '+5521988733159' },
+                { name: 'Juninho (Filho)', phone: '+5511888888888' },
+                { name: 'Mariana (Filha)', phone: '+5511777777777' }
+            ];
+            localStorage.setItem('whatsappContacts', JSON.stringify(newContacts));
+            
+            loadContacts();
+            updateTime();
+            setInterval(updateTime, 1000);
+            requestWakeLock();
+
+            // Reativar wake lock se a página voltar ao foco
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden && wakeLock === null) {
+                    requestWakeLock();
+                }
+            });
+        });
+
+        // Fechar modal clicando fora
+        document.getElementById('contactModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+
+    </script>
+</body>
+</html>
