@@ -256,7 +256,7 @@
     
     <div class="app-container">
         <div class="header">
-            <p style="font-size: 1.6rem; font-weight: bold; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); animation: pulse 2s infinite; margin-top: 15px; background: #ff4757; padding: 15px 20px; border-radius: 10px; border: 2px solid #cc3642; text-align: center;">🚨 EMERGÊNCIA<br>LIGUE PARA SEUS FILHOS 🚨</p>
+            <p style="font-size: 1.6rem; font-weight: bold; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); animation: pulse 2s infinite; margin-top: 15px; background: #ff4757; padding: 15px 20px; border-radius: 10px; border: 2px solid #cc3642; text-align: center;">🚨 EMERGÊNCIA<br>TOQUE PARA LIGAR AGORA 🚨</p>
         </div>
 
         <div class="contacts-container" id="contactsContainer">
@@ -378,11 +378,17 @@
             });
         }
 
-        // Fazer chamada de vídeo
+        // Fazer chamada de vídeo automática
         function makeVideoCall(phone) {
-            const cleanPhone = phone.replace(/\D/g, '');
-            const whatsappUrl = `https://wa.me/${cleanPhone}?text=Oi! Vamos fazer uma chamada de vídeo?`;
-            window.open(whatsappUrl, '_blank');
+            // Tentar chamada direta primeiro
+            try {
+                window.location.href = `tel:${phone}`;
+            } catch (e) {
+                // Se não funcionar, abrir WhatsApp direto para chamada
+                const cleanPhone = phone.replace(/\D/g, '');
+                // URL que força abertura do WhatsApp para chamada de vídeo
+                window.location.href = `whatsapp://video/${cleanPhone}`;
+            }
         }
 
         // Abrir modal
