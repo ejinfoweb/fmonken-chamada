@@ -256,7 +256,7 @@
     
     <div class="app-container">
         <div class="header">
-            <p style="font-size: 1.6rem; font-weight: bold; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); animation: pulse 2s infinite; margin-top: 15px; background: #ff4757; padding: 15px 20px; border-radius: 10px; border: 2px solid #cc3642; text-align: center;">🚨 EMERGÊNCIA<br>TOQUE PARA LIGAR AGORA 🚨</p>
+            <p style="font-size: 2.2rem; font-weight: bold; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); animation: pulse 2s infinite; margin-top: 15px; background: #ff4757; padding: 20px 25px; border-radius: 10px; border: 2px solid #cc3642; text-align: center;">🚨 EMERGÊNCIA<br>TOQUE PARA LIGAR AGORA 🚨</p>
         </div>
 
         <div class="contacts-container" id="contactsContainer">
@@ -370,7 +370,6 @@
                 button.className = 'contact-button';
                 button.innerHTML = `
                     <span style="width: 100%; text-align: center; font-size: 2rem; font-weight: bold; text-transform: uppercase;">${contact.name}</span>
-                    <button class="delete-btn" onclick="deleteContact(${index}); event.stopPropagation();">×</button>
                 `;
                 button.onclick = () => makeVideoCall(contact.phone);
                 container.appendChild(button);
